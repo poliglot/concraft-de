@@ -80,9 +80,7 @@ tiersDefault =
     [tier1, tier2]
   where
     tier1 = D.Tier True $ S.fromList ["cas", "per"]
-    tier2 = D.Tier False $ S.fromList
-        [ "nmb", "gnd", "deg", "asp" , "ngt", "acm"
-        , "acn", "ppr", "agg", "vlc", "dot" ]
+    tier2 = D.Tier False $ S.fromList ["nmb", "gnd", "deg", "ten", "mod"]
 
 
 -------------------------------------------------

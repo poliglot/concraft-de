@@ -14,7 +14,7 @@ category:           Natural Language Processing
 homepage:           http://zil.ipipan.waw.pl/Concraft
 build-type:         Simple
 
-extra-source-files: changelog
+-- extra-source-files: changelog
 
 data-files: config/tiger-tagset.cfg
 
