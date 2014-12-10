@@ -25,8 +25,8 @@ import qualified Data.Text.Lazy as L
 import qualified Data.Binary as B
 
 import           NLP.Concraft.German
-import           NLP.Concraft.German.Maca
 import           NLP.Concraft.German.Morphosyntax hiding (tag)
+import qualified NLP.Concraft.German.MorphAnalysis as MorphAnalysis
 
 
 -------------------------------------------------
@@ -74,9 +74,9 @@ instance B.Binary Short where
 
 
 -- | Process the short request.
-short :: MacaPool -> Concraft -> Request Short -> IO [Sent Tag]
-short pool concraft Request{..} = case rqBody of
-    Short x -> map (tagit concraft) <$> macaPar pool x
+short :: String -> Int -> Concraft -> Request Short -> IO [Sent Tag]
+short host port concraft Request{..} = case rqBody of
+    Short x -> map (tagit concraft) <$> MorphAnalysis.analyseParagraph host port x
     Par x   -> return $ map (tagit concraft) x
   where
     tagit = if tagProbs rqConf then marginals else tag

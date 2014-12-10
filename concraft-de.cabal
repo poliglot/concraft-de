@@ -40,7 +40,7 @@ library
 
     exposed-modules:
         NLP.Concraft.German
-      , NLP.Concraft.German.Maca
+      , NLP.Concraft.German.MorphAnalysis
       , NLP.Concraft.German.Morphosyntax
       , NLP.Concraft.German.Request
       , NLP.Concraft.German.Server

@@ -13,19 +13,12 @@ module NLP.Concraft.German
 , tag
 , marginals
 
--- * Analysis
-, macaPar
-
 -- * Training
 , TrainConf (..)
 , train
 
 -- * Pruning
 , C.prune
-
--- -- * Analysis
--- , anaSent
--- , reAnaPar
 ) where
 
 
@@ -42,10 +35,9 @@ import           NLP.Concraft.Schema (SchemaConf(..), entry, entryWith)
 import qualified NLP.Concraft.Guess as G
 import qualified NLP.Concraft.Disamb as D
 import qualified NLP.Concraft as C
--- import qualified NLP.Concraft.Analysis as A
 
 import           NLP.Concraft.German.Morphosyntax hiding (tag)
-import           NLP.Concraft.German.Maca
+import qualified NLP.Concraft.German.MorphAnalysis as MorphAnalysis
 
 
 -------------------------------------------------
@@ -134,7 +126,12 @@ data TrainConf = TrainConf {
     -- | Numer of guessed tags for each word.
     , guessNum  :: Int
     -- | `G.r0T` parameter.
-    , r0        :: G.R0T }
+    , r0        :: G.R0T
+
+	-- | Connection details of morphological analyser
+    , morphHost :: String
+    , morphPort :: Int
+}
 
 -- | Train concraft model.
 -- TODO: It should be possible to supply the two training procedures with
@@ -146,8 +143,7 @@ train
     -> IO C.Concraft
 train TrainConf{..} train0 eval0 = do
 
-    pool <- newMacaPool 1
-    let ana = anaSent tagset pool
+    let ana = anaSent tagset morphHost morphPort
         train1 = map (packSentO tagset) <$> train0
         eval1  = map (packSentO tagset) <$> eval0
 
@@ -158,7 +154,7 @@ train TrainConf{..} train0 eval0 = do
   where
 
     doReana ana   = C.reAnaTrain tagset ana guessNum guessConf disambConf
-    noReana tr ev = C.train tagset guessNum guessConf disambConf 
+    noReana tr ev = C.train      tagset     guessNum guessConf disambConf
         (map X.segs <$> tr) (map X.segs <$> ev)
 
     guessConf  = G.TrainConf guessSchemaDefault sgdArgs onDisk r0
@@ -169,17 +165,7 @@ train TrainConf{..} train0 eval0 = do
 -- Re-analysis
 -------------------------------------------------
 
-
--- | Analyse the given sentence with Maca.
--- anaSent :: MacaPool -> L.Text -> IO (Sent Tag)
-anaSent :: P.Tagset -> MacaPool -> L.Text -> IO (X.Sent Word P.Tag)
-anaSent tagset pool
-    = fmap (packSent tagset . concat)
-    . macaPar pool . L.toStrict
-
-
--- -- | Reanalyse the input paragraph (lazy IO).
--- reAnaPar :: P.Tagset -> [SentO Tag] -> IO [Sent Tag]
--- reAnaPar tagset inp = do
---     pool <- newMacaPool 1
---     A.reAnaPar tagset (anaSent pool) inp
+-- | Analyse the given paragraph.
+anaSent :: P.Tagset -> String -> Int -> L.Text -> IO (X.Sent Word P.Tag)
+anaSent tagset host port text =
+	fmap (packSent tagset . concat) . MorphAnalysis.analyseParagraph host port . L.toStrict $ text

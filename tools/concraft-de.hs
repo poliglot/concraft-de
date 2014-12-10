@@ -12,12 +12,10 @@ import qualified Numeric.SGD as SGD
 import qualified Data.Text.Lazy as L
 import qualified Data.Text.Lazy.IO as L
 import           Data.Tagset.Positional (parseTagset)
-import           GHC.Conc (numCapabilities)
 
 import qualified NLP.Concraft.Morphosyntax.Accuracy as Acc
 import qualified NLP.Concraft.Guess as Guess
 
-import qualified NLP.Concraft.German.Maca as Maca
 import qualified NLP.Concraft.German as C
 import qualified NLP.Concraft.German.Request as R
 import qualified NLP.Concraft.German.Server as S
@@ -28,10 +26,13 @@ import           Paths_concraft_de (version, getDataFileName)
 import           Data.Version (showVersion)
 
 
--- | Default port number.
+-- | Default port number of server.
 portDefault :: Int
 portDefault = 10090
 
+-- | Default port number of morphological analyser.
+morphPortDefault :: Int
+morphPortDefault = 1234
 
 ---------------------------------------
 -- Command line options
@@ -63,16 +64,22 @@ data Concraft
     , disk          :: Bool
     , outModel      :: FilePath
     , guessNum      :: Int
-    , r0            :: Guess.R0T }
+    , r0            :: Guess.R0T
+    , morphHost     :: String
+    , morphPort     :: Int }
   | Tag
     { inModel       :: FilePath
     , noAna         :: Bool
     , format        :: Format
-    , marginals     :: Bool }
+    , marginals     :: Bool
+    , morphHost     :: String
+    , morphPort     :: Int }
     -- , guessNum      :: Int }
   | Server
     { inModel       :: FilePath
-    , port          :: Int }
+    , port          :: Int
+    , morphHost     :: String
+    , morphPort     :: Int }
   | Client
     { noAna         :: Bool
     , format        :: Format
@@ -109,7 +116,9 @@ trainMode = Train
     , disk = False &= help "Store SGD dataset on disk"
     , outModel = def &= typFile &= help "Output Model file"
     , guessNum = 10 &= help "Number of guessed tags for each unknown word"
-    , r0 = Guess.OovChosen &= help "R0 construction method" }
+    , r0 = Guess.OovChosen &= help "R0 construction method"
+    , morphHost = "localhost" &= help "Host name of morphological analyser"
+    , morphPort = morphPortDefault &= help "Port number of morphological analyser" }
 
 
 tagMode :: Concraft
@@ -117,14 +126,17 @@ tagMode = Tag
     { inModel  = def &= argPos 0 &= typ "MODEL-FILE"
     , noAna    = False &= help "Do not analyse input text"
     , format   = enum [Plain &= help "Plain format"]
-    , marginals = False &= help "Tag with marginal probabilities" }
+    , marginals = False &= help "Tag with marginal probabilities"
+    , morphHost = "localhost" &= help "Host name of morphological analyser"
+    , morphPort = morphPortDefault &= help "Port number of morphological analyser" }
     -- , guessNum = 10 &= help "Number of guessed tags for each unknown word" }
-
 
 serverMode :: Concraft
 serverMode = Server
     { inModel = def &= argPos 0 &= typ "MODEL-FILE"
-    , port    = portDefault &= help "Port number" }
+    , port    = portDefault &= help "Port number"
+    , morphHost = "localhost" &= help "Host name of morphological analyser"
+    , morphPort = morphPortDefault &= help "Port number of morphological analyser" }
 
 
 clientMode :: Concraft
@@ -200,14 +212,15 @@ exec Train{..} = do
         , reana     = not noAna
         , onDisk    = disk
         , guessNum  = guessNum
-        , r0        = r0 }
+        , r0        = r0
+        , morphHost = morphHost
+        , morphPort = morphPort }
 
 
 exec Tag{..} = do
     cft <- C.loadModel inModel
-    pool <- Maca.newMacaPool numCapabilities
     inp <- L.getContents
-    out <- R.long (R.short pool cft) $ rq $ if noAna
+    out <- R.long (R.short morphHost morphPort cft) $ rq $ if noAna
         then R.Doc $ parseText format inp
         else R.Long inp
     L.putStr $ showData showCfg out
@@ -226,10 +239,9 @@ exec Server{..} = do
     putStr "Loading model..." >> hFlush stdout
     concraft <- C.loadModel inModel
     putStrLn " done"
-    pool <- Maca.newMacaPool numCapabilities
     let portNum = N.PortNumber $ fromIntegral port
     putStrLn $ "Listening on port " ++ show port
-    S.runConcraftServer pool concraft portNum
+    S.runConcraftServer morphHost morphPort concraft portNum
 
 
 exec Client{..} = do

@@ -21,7 +21,6 @@ import qualified Data.Binary as B
 import qualified Data.ByteString.Lazy as BS
 
 import           NLP.Concraft.German.Morphosyntax hiding (tag)
-import           NLP.Concraft.German.Maca
 import qualified NLP.Concraft.German as C
 import qualified NLP.Concraft.German.Request as R
 
@@ -32,22 +31,22 @@ import qualified NLP.Concraft.German.Request as R
 
 
 -- | Run a Concraft server on a given port.
-runConcraftServer :: MacaPool -> C.Concraft -> N.PortID -> IO ()
-runConcraftServer pool concraft port = N.withSocketsDo $ do
+runConcraftServer :: String -> Int -> C.Concraft -> N.PortID -> IO ()
+runConcraftServer morphHost morphPort concraft port = N.withSocketsDo $ do
     sock <- N.listenOn port
-    forever $ sockHandler pool concraft sock
+    forever $ sockHandler morphHost morphPort concraft sock
 
 
 -- | Read and process short requests from the socket.
-sockHandler :: MacaPool -> C.Concraft -> N.Socket -> IO ()
-sockHandler pool concraft sock = do
+sockHandler :: String -> Int -> C.Concraft -> N.Socket -> IO ()
+sockHandler host port concraft sock = do
     (handle, _, _) <- N.accept sock
     -- putStrLn "Connection established"
     void $ forkIO $ do
         -- putStrLn "Waiting for input..."
         inp <- recvMsg handle
         -- putStr "> " >> T.putStrLn inp
-        out <- R.short pool concraft inp
+        out <- R.short host port concraft inp
         -- putStr "No. of sentences: " >> print (length out)
         sendMsg handle out
 
