@@ -2,7 +2,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
 
-module NLP.Concraft.Polish
+module NLP.Concraft.German
 (
 -- * Model
   C.Concraft
@@ -44,8 +44,8 @@ import qualified NLP.Concraft.Disamb as D
 import qualified NLP.Concraft as C
 -- import qualified NLP.Concraft.Analysis as A
 
-import           NLP.Concraft.Polish.Morphosyntax hiding (tag)
-import           NLP.Concraft.Polish.Maca
+import           NLP.Concraft.German.Morphosyntax hiding (tag)
+import           NLP.Concraft.German.Maca
 
 
 -------------------------------------------------

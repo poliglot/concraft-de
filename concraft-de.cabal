@@ -1,12 +1,12 @@
-name:               concraft-pl
-version:            0.7.4
-synopsis:           Morphological tagger for Polish
+name:               concraft-de
+version:            0.1
+synopsis:           Morphological tagger for German
 description:
-    A morphological tagger for Polish based on the concraft library.
+    A morphological tagger for German based on the concraft library.
 license:            BSD3
 license-file:       LICENSE
 cabal-version:      >= 1.6
-copyright:          Copyright (c) 2013 Jakub Waszczuk
+copyright:          Copyright (c) 2013-2014 Jakub Waszczuk
 author:             Jakub Waszczuk
 maintainer:         waszczuk.kuba@gmail.com
 stability:          experimental
@@ -16,7 +16,7 @@ build-type:         Simple
 
 extra-source-files: changelog
 
-data-files: config/nkjp-tagset.cfg
+data-files: config/tiger-tagset.cfg
 
 library
     hs-source-dirs: src
@@ -39,24 +39,24 @@ library
       , split                   >= 0.2      && < 0.3
 
     exposed-modules:
-        NLP.Concraft.Polish
-      , NLP.Concraft.Polish.Maca
-      , NLP.Concraft.Polish.Morphosyntax
-      , NLP.Concraft.Polish.Request
-      , NLP.Concraft.Polish.Server
+        NLP.Concraft.German
+      , NLP.Concraft.German.Maca
+      , NLP.Concraft.German.Morphosyntax
+      , NLP.Concraft.German.Request
+      , NLP.Concraft.German.Server
 
     other-modules:
-        NLP.Concraft.Polish.Format.Plain
+        NLP.Concraft.German.Format.Plain
 
     ghc-options: -Wall -O2
 
 source-repository head
     type: git
-    location: https://github.com/kawu/concraft-pl.git
+    location: https://github.com/tindzk/concraft-de.git
 
-executable concraft-pl
+executable concraft-de
     build-depends:
         cmdargs                 >= 0.10     && < 0.11
     hs-source-dirs: src, tools
-    main-is: concraft-pl.hs
+    main-is: concraft-de.hs
     ghc-options: -Wall -O2 -threaded -rtsopts

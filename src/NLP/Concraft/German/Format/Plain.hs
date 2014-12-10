@@ -6,7 +6,7 @@
 -- with no spaces within and that one of the tags indicates
 -- unknown words.
 
-module NLP.Concraft.Polish.Format.Plain
+module NLP.Concraft.German.Format.Plain
 (
 -- * Parsing
   parsePlain
@@ -33,7 +33,7 @@ import qualified Data.Text.Lazy.Read as R
 import           Text.Printf (printf)
 
 import qualified NLP.Concraft.Morphosyntax as X
-import           NLP.Concraft.Polish.Morphosyntax
+import           NLP.Concraft.German.Morphosyntax
 
 -- | Parse the text in the plain format.
 parsePlain :: L.Text -> [[Sent Tag]]

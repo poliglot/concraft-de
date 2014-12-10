@@ -2,7 +2,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
 
-module NLP.Concraft.Polish.Server
+module NLP.Concraft.German.Server
 ( 
 -- * Server
   runConcraftServer
@@ -20,10 +20,10 @@ import qualified Network as N
 import qualified Data.Binary as B
 import qualified Data.ByteString.Lazy as BS
 
-import           NLP.Concraft.Polish.Morphosyntax hiding (tag)
-import           NLP.Concraft.Polish.Maca
-import qualified NLP.Concraft.Polish as C
-import qualified NLP.Concraft.Polish.Request as R
+import           NLP.Concraft.German.Morphosyntax hiding (tag)
+import           NLP.Concraft.German.Maca
+import qualified NLP.Concraft.German as C
+import qualified NLP.Concraft.German.Request as R
 
 
 -------------------------------------------------

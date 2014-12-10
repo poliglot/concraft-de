@@ -3,10 +3,10 @@
 {-# LANGUAGE TupleSections #-}
 
 
--- | Morphosyntax data layer in Polish.
+-- | Morphosyntax data layer in German.
 
 
-module NLP.Concraft.Polish.Morphosyntax
+module NLP.Concraft.German.Morphosyntax
 ( 
 -- * Tag
   Tag

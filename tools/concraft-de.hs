@@ -17,20 +17,20 @@ import           GHC.Conc (numCapabilities)
 import qualified NLP.Concraft.Morphosyntax.Accuracy as Acc
 import qualified NLP.Concraft.Guess as Guess
 
-import qualified NLP.Concraft.Polish.Maca as Maca
-import qualified NLP.Concraft.Polish as C
-import qualified NLP.Concraft.Polish.Request as R
-import qualified NLP.Concraft.Polish.Server as S
-import qualified NLP.Concraft.Polish.Morphosyntax as X
-import qualified NLP.Concraft.Polish.Format.Plain as P
+import qualified NLP.Concraft.German.Maca as Maca
+import qualified NLP.Concraft.German as C
+import qualified NLP.Concraft.German.Request as R
+import qualified NLP.Concraft.German.Server as S
+import qualified NLP.Concraft.German.Morphosyntax as X
+import qualified NLP.Concraft.German.Format.Plain as P
 
-import           Paths_concraft_pl (version, getDataFileName)
+import           Paths_concraft_de (version, getDataFileName)
 import           Data.Version (showVersion)
 
 
 -- | Default port number.
 portDefault :: Int
-portDefault = 10089
+portDefault = 10090
 
 
 ---------------------------------------
@@ -42,9 +42,9 @@ portDefault = 10089
 data Format = Plain deriving (Data, Typeable, Show)
 
 
--- | A description of the Concraft-pl tool
+-- | A description of the Concraft-de tool
 concraftDesc :: String
-concraftDesc = "Concraft-pl " ++ showVersion version
+concraftDesc = "Concraft-de " ++ showVersion version
 
 
 data Concraft
@@ -161,7 +161,7 @@ argModes :: Mode (CmdArgs Concraft)
 argModes = cmdArgsMode $ modes
     [trainMode, tagMode, serverMode, clientMode, compareMode, pruneMode]
     &= summary concraftDesc
-    &= program "concraft-pl"
+    &= program "concraft-de"
 
 
 ---------------------------------------
@@ -178,7 +178,7 @@ exec :: Concraft -> IO ()
 
 exec Train{..} = do
     tagsetPath' <- case tagsetPath of
-        Nothing -> getDataFileName "config/nkjp-tagset.cfg"
+        Nothing -> getDataFileName "config/tiger-tagset.cfg"
         Just x  -> return x
     tagset <- parseTagset tagsetPath' <$> readFile tagsetPath'
     let train0 = parseFileO  format trainPath

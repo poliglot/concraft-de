@@ -2,7 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 
-module NLP.Concraft.Polish.Request
+module NLP.Concraft.German.Request
 (
 -- * Request 
   Request (..)
@@ -24,9 +24,9 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy as L
 import qualified Data.Binary as B
 
-import           NLP.Concraft.Polish
-import           NLP.Concraft.Polish.Maca
-import           NLP.Concraft.Polish.Morphosyntax hiding (tag)
+import           NLP.Concraft.German
+import           NLP.Concraft.German.Maca
+import           NLP.Concraft.German.Morphosyntax hiding (tag)
 
 
 -------------------------------------------------

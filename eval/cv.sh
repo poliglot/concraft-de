@@ -32,11 +32,11 @@ do
     done
 
     # Train tagger and tag eval file.
-    concraft-pl train --tagset=$nkjp_tagset $data/train/train$i.plain -e $data/folds/test$i.plain -o $data/concraft/model$i.gz "$@"
-    concraft-pl tag $data/concraft/model$i.gz < $data/text/test$i.txt > $data/tagged/test$i.plain
+    concraft-de train --tagset=$nkjp_tagset $data/train/train$i.plain -e $data/folds/test$i.plain -o $data/concraft/model$i.gz "$@"
+    concraft-de tag $data/concraft/model$i.gz < $data/text/test$i.txt > $data/tagged/test$i.plain
 
     echo -e "\nSTATS\n"
-    concraft-pl compare --tagset=$nkjp_tagset $data/folds/test$i.plain $data/tagged/test$i.plain
+    concraft-de compare --tagset=$nkjp_tagset $data/folds/test$i.plain $data/tagged/test$i.plain
     echo -e "\nEND STATS\n"
 
     # Delete the training material, we will not need it again.

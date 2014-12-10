@@ -7,7 +7,7 @@
 -- for more information about the analyser.
 
 
-module NLP.Concraft.Polish.Maca
+module NLP.Concraft.German.Maca
 (
   MacaPool
 , newMacaPool
@@ -31,8 +31,8 @@ import qualified Control.Monad.State.Strict as S
 import qualified Control.Monad.Trans.Maybe as M
 import           Control.Monad.Trans.Class (lift)
 
-import           NLP.Concraft.Polish.Morphosyntax hiding (restore)
-import qualified NLP.Concraft.Polish.Format.Plain as Plain
+import           NLP.Concraft.German.Morphosyntax hiding (restore)
+import qualified NLP.Concraft.German.Format.Plain as Plain
 
 
 ----------------------------
